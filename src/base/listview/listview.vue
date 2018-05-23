@@ -7,7 +7,7 @@
 						<li v-for="group in data" class="list-grounp" ref="listgroup">
 							<h2 class="list-group-title">{{group.title}}</h2>
 							<ul>
-								<li v-for="item in group.items" class="list-group-item">
+								<li v-for="item in group.items" @click="selectItem(item)" class="list-group-item">
 									<img v-lazy="item.avatar" alt="" />
 									<span class='name'>{{item.name}}</span>
 								</li>
@@ -24,6 +24,9 @@
 					</li>
 				</ul>
 			</div>
+			<div class="list-fixed" v-show="fixedTitle" ref="fixed">
+				<h2 class="fixed-title">{{fixedTitle}}</h2>
+			</div>
 			<v-login v-if="!show"></v-login>
 		</div>
 	</transition>
@@ -34,6 +37,7 @@
 	import Login from 'base/lodin/lodin'
 	import {getData} from 'common/js/dom'
 	const ANCHOR_HEIGHT = 18
+	const TITLE_HEIGHT = 30
 	export default{
 		props:{
 			data: {
@@ -51,6 +55,8 @@
 				currentIndex: 0,
 				//列表高度数组初始值
 				listHeight: [],
+				//固定标题
+				diff:[],
 			}
 		},
 		created(){
@@ -61,6 +67,10 @@
 			this.probeType = 3
 		},
 		methods:{
+			//列表点击事件
+			selectItem(item){
+				this.$emit('select',item)
+			},
 			//手指点击事件触发函数
 			onShortcutTouchStart(e){
 				//获取当前点击元素的属性的值、关联dom.js
@@ -149,11 +159,23 @@
 					let height2 = listHeight[i+1]
 					if(!height2||(-newY >= height1 && -newY < height2)){
 						this.currentIndex = i
+						//滚动距离的偏差
+						this.diff = height2 + newY
 						return
 					}
 				}
 				//在底部部分滚动，且-newY大于最后一个元素的上限
 				this.currentIndex = listHeight.length - 2
+			},
+			//当diff数据发生变化时触发
+			diff(newVal){
+				let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
+				fixedTop = parseInt(fixedTop)
+		        if (this.fixedTop === fixedTop) {
+		          return
+		        }
+		        this.fixedTop = fixedTop
+		        this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
 			}
 		},
 		computed:{
@@ -167,6 +189,12 @@
 					})
 				}
 			},
+			fixedTitle(){
+				if(this.scrollYe>0){
+					return ''
+				}
+				return this.data[this.currentIndex]?this.data[this.currentIndex].title:''
+			}
 		},
 		components:{
 			Scroll,
@@ -178,7 +206,7 @@
 <style>
 	.listview{width: 100%;position: fixed;top: 92px;bottom: 0;z-index: -1;}
 	.listview-content{height: 100%;overflow: hidden;}
-	.list-group-title{margin: 0;padding: 5px 15px;font-size: 12px;text-align: left;font-weight: 400;background-color:#333;color: #919191}
+	.list-group-title{margin: 0;padding: 5px 15px;height: 20px;line-height: 20px;font-size: 12px;text-align: left;font-weight: 400;background-color:#333;color: #919191}
 	.list-group-item{text-align: left;padding: 20px 0 0 30px;font-size: 14px;color: #919191}
 	.list-grounp{padding-bottom: 20px}
 	.list-group-item img{display: inline-block;width: 50px;height: 50px;vertical-align: middle;border-radius: 50%;}
@@ -186,6 +214,8 @@
 	.list-shortcut{position: absolute;right: 0;top: 50%;transform: translateY(-50%);font-size: 12px;color: #919191;background-color: #333;}
 	.list-shortcut ul li{list-style: none;padding: 2px 3px;}
 	.current{color: #FECC32}
+	.list-fixed{position: absolute;top: 0;left: 0;width: 100%;background-color: #333;color: #919191;}
+	.list-fixed h2{margin: 0;height: 20px;line-height: 20px;padding: 5px 15px;font-size: 12px;text-align: left;font-weight: 400;}
 	/*.slider-enter-active, .slider-leave-active {
 	  	transition: all .3s ease;
 	}

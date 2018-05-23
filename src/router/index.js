@@ -4,6 +4,7 @@ import personal from 'components/personal/personal'
 import recommend from 'components/recommend/recommend'
 import singer from 'components/singer/singer'
 import tab from 'components/mctab/mctab'
+import SingerDetail from 'components/singer-detail/singer-detail'
 
 Vue.use(Router)
 
@@ -27,7 +28,13 @@ export default new Router({
 		{
 			path: '/singer',
 			name: 'singer',
-			component: singer
+			component: singer,
+			children:[
+				{
+					path: ':id',
+					component: SingerDetail
+				}
+			]
 		}
 	]
 })
