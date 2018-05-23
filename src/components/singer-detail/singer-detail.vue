@@ -2,6 +2,7 @@
 	<transition name='slide'>
 		<div class="singer-detail-box">
 			
+			
 		</div>
 	</transition>
 </template>
