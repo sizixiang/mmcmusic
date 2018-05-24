@@ -10,6 +10,8 @@
 	import { ERR_OK } from "api/config"
 	import Singer from 'common/js/singer'
 	import ListView from 'base/listview/listview'
+	//vuex的语法糖
+	import {mapMutations} from 'vuex'
 	const HOT_NAME = "热门"
 	const HOT_SINGER_LENGTH = 10
 	export default {
@@ -86,7 +88,13 @@
 				this.$router.push({
 					path: `/singer/${singer.id}`
 				})
-			}
+				this.setSinger(singer);
+				//this.setSinger(singer) = this.$store.commit('SET_SINGER', singer)
+			},
+			...mapMutations({
+				setSinger: 'SET_SINGER'
+			})
+			
 		},
 		components:{
 			ListView
