@@ -8,6 +8,8 @@ import store from './store'
 import fastclick from 'fastclick'
 import VueLazyLoad from 'vue-lazyload'
 
+import '../static/css/commona.css'
+
 fastclick.attach(document.body);
 Vue.use(VueLazyLoad,{
 	loading: require('common/image/010d2c58c3fb40a801219c77c8b1c9.gif')
