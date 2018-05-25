@@ -4,7 +4,7 @@
 		<div class="bg-image" :style="bgStyle" ref="bgimage">
 			<div class="filter"></div>
 		</div>
-		<scroll :data="songs" :listenScroll="listenScroll" :probeType="probeType" class="list" ref="list" @scroll="scroll">
+		<scroll :data="songs" :listen-scroll="listenScroll" :probe-type="probeType" class="list" ref="list" @scroll="scroll">
 			<div class="song-list-wrapper">
 				<song-list :songs="songs"></song-list>
 			</div>

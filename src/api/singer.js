@@ -51,4 +51,6 @@ export function getSendVkeyInformation(singerId,songmId){
 		filename :`C400${songmId}.m4a`,
 		guid: 439900480
 	})
+	
+	return jsonp (url,data,options)
 }
